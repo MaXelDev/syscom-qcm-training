@@ -1,0 +1,12 @@
+.mt{display:grid;gap:10px}
+.mrow{display:grid;grid-template-columns:minmax(180px,1fr) 2fr;gap:10px;align-items:center;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg)}
+.mrow .ml{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92rem;word-break:break-word}
+.mrow select{font:inherit;color:var(--text);background:var(--card);border:1.5px solid var(--line);border-radius:9px;padding:7px 8px;width:100%}
+.mrow select:focus-visible{outline:3px solid var(--accent2)}
+.mrow .tag{grid-column:1/-1}
+.mrow.ok{border-color:var(--ok);background:var(--okbg)}
+.mrow.bad{border-color:var(--bad);background:var(--badbg)}
+.mrow.ok .tag{color:var(--ok);font-weight:700}
+.mrow.bad .tag{color:var(--bad);font-weight:700}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--bg);padding:1px 5px;border-radius:6px}
+@media(max-width:700px){.mrow{grid-template-columns:1fr}}

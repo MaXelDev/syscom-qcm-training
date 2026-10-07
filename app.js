@@ -6,7 +6,7 @@ function setTheme(t){document.documentElement.dataset.theme=t;$("#theme").textCo
 setTheme(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
 $("#theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
 
-const isOK=i=>S.qs[i].options.every((o,j)=>o.ok===S.ans[i].has(j));
+const isOK=i=>{const q=S.qs[i];return q.rows?q.rows.every((r,ri)=>S.ans[i].has(ri*100+r.a)):q.options.every((o,j)=>o.ok===S.ans[i].has(j));};
 const answered=()=>S.ans.filter(a=>a.size).length;
 
 function home(){
@@ -21,7 +21,7 @@ function home(){
 }
 
 function start(){
-  const qs=shuffle(BANK.map(f=>f())).map(q=>({...q,options:q.keep?q.options:shuffle(q.options)}));
+  const qs=shuffle(BANK.map(f=>f())).map(q=>({...q,options:(q.options&&!q.keep)?shuffle(q.options):q.options}));
   S={qs,ans:qs.map(()=>new Set()),flag:qs.map(()=>false),cur:0,done:false,filter:"all"};
   renderQuiz();window.scrollTo(0,0);
 }
@@ -38,12 +38,24 @@ function head(i){
   let h=`<span class="qn">Question ${i+1}<small> / ${S.qs.length}</small></span>`;
   if(q.ai)h+=`<span class="badge ai" title="Question créée par IA à partir du cours">✦ Créée par IA avec le cours</span>`;
   if(S.done)h+=isOK(i)?`<span class="badge ok">✓ Juste · +1</span>`:`<span class="badge bad">✗ Faux · 0</span>`;
-  h+=`<span class="hint">${q.multi?"Plusieurs réponses possibles":"Une seule réponse"}</span>`;
+  h+=`<span class="hint">${q.rows?"Associer chaque ligne à une réponse":q.multi?"Plusieurs réponses possibles":"Une seule réponse"}</span>`;
   return `<div class="qh">${h}</div>`;
+}
+
+function matchHTML(i){
+  const q=S.qs[i],s=S.ans[i];
+  return `<div class="mt">`+q.rows.map((r,ri)=>{
+    const cur=[...s].find(v=>Math.floor(v/100)===ri),val=cur===undefined?-1:cur%100;
+    const opts=`<option value="">— choisir —</option>`+q.choices.map((c,ci)=>`<option value="${ci}" ${val===ci?"selected":""}>${c}</option>`).join("");
+    if(!S.done)return `<div class="mrow"><span class="ml">${r.l}</span><select data-r="${ri}">${opts}</select></div>`;
+    const ok=val===r.a;
+    return `<div class="mrow ${ok?"ok":"bad"}"><span class="ml">${r.l}</span><select disabled>${opts}</select><span class="tag">${ok?"✓ Juste":"✗ Faux — bonne réponse : "+q.choices[r.a]}</span></div>`;
+  }).join("")+"</div>";
 }
 
 function optsHTML(i){
   const q=S.qs[i],type=q.multi?"checkbox":"radio";
+  if(q.rows)return matchHTML(i);
   return `<div class="opts ${q.grid?"grid2":""}">`+q.options.map((o,j)=>{
     const sel=S.ans[i].has(j);
     if(!S.done)return `<label class="opt ${q.multi?"":"radio"}"><input type="${type}" name="q${i}" data-j="${j}" ${sel?"checked":""}><span class="mark"></span><span class="lt">${LT[j]}.</span><span class="ot">${o.t}</span></label>`;
@@ -58,6 +70,11 @@ function optsHTML(i){
 function card(i){
   const q=S.qs[i];
   return `<article class="card ${S.done?(isOK(i)?"isok":"iswrong"):""}" id="rq${i}">${head(i)}<div class="qt">${q.text}</div>${q.fig||""}${optsHTML(i)}</article>`;
+}
+
+function refresh(){
+  const n=S.qs.length;
+  $("#nvg").innerHTML=navHTML();$("#cnt").textContent=`${answered()} / ${n} répondues`;$("#bar").style.width=answered()/n*100+"%";
 }
 
 function renderQuiz(){
@@ -78,7 +95,13 @@ function renderQuiz(){
   document.querySelectorAll(".opt input").forEach(inp=>inp.onchange=()=>{
     const j=+inp.dataset.j,s=S.ans[S.cur];
     if(S.qs[S.cur].multi){inp.checked?s.add(j):s.delete(j);}else{s.clear();s.add(j);}
-    $("#nvg").innerHTML=navHTML();$("#cnt").textContent=`${answered()} / ${n} répondues`;$("#bar").style.width=answered()/n*100+"%";
+    refresh();
+  });
+  document.querySelectorAll(".mrow select").forEach(sel=>sel.onchange=()=>{
+    const s=S.ans[S.cur],r=+sel.dataset.r;
+    [...s].filter(v=>Math.floor(v/100)===r).forEach(v=>s.delete(v));
+    if(sel.value!=="")s.add(r*100+Number(sel.value));
+    refresh();
   });
 }
 
