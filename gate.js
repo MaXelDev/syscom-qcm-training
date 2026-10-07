@@ -1,11 +1,17 @@
 "use strict";
-/* Code d'accès : vérifié en lisant pass.json (le code n'apparaît pas dans le HTML) */
+/* Code d'accès : vérifié en lisant pass.json (le code n'apparaît pas dans le HTML) + encart des sources */
 const _home=home;
 home=function(){
   _home();
-  const go=$("#go");
-  go.insertAdjacentHTML("beforebegin",`<form id="gate" class="gate" autocomplete="off"><label for="pw">Code d'accès</label><input id="pw" type="password" autocomplete="off" placeholder="Entre le code pour commencer"><div id="pwerr" class="pwerr" role="alert"></div></form>`);
-  const err=m=>{$("#pwerr").textContent=m;$("#pw").focus();};
+  const go=$("#go"),rules=document.querySelector(".rules");
+  rules.insertAdjacentHTML("beforebegin",`<div class="sources"><h3>Questions utilisées</h3><ul><li>Les 3 QCMs d'entraînement de Chantal Prime</li><li>Le QCM noté tombé l'an dernier</li><li>Les questions créées par l'IA sont repérées par le badge <span class="badge ai">✦ Créée par IA avec le cours</span></li></ul></div>`);
+  go.insertAdjacentHTML("beforebegin",`<form id="gate" class="gate" autocomplete="off"><div class="gate-title">🔒 Accès au QCM</div><input id="pw" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Code d'accès" aria-label="Code d'accès"><div id="pwerr" class="pwerr" role="alert"></div></form>`);
+  const err=m=>{
+    const g=$("#gate");
+    $("#pwerr").textContent=m;
+    g.classList.remove("shake");void g.offsetWidth;g.classList.add("shake");
+    $("#pw").focus();$("#pw").select();
+  };
   go.onclick=async()=>{
     const v=$("#pw").value.trim();
     if(!v){err("Entre le code d'accès.");return;}
