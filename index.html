@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>SysCom – Entraînement QCM</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+<div class="brand"><span class="logo">∿</span> SysCom <small>Entraînement QCM</small></div>
+<button id="theme" class="btn ghost" type="button" aria-label="Changer de thème">🌙 Mode sombre</button>
+</header>
+<main id="app"></main>
+<dialog id="dlg">
+<div id="dlgBody"></div>
+<div class="dlg-actions">
+<button class="btn ghost" id="dlgNo" type="button">Continuer à répondre</button>
+<button class="btn primary" id="dlgYes" type="button">Valider et corriger</button>
+</div>
+</dialog>
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
