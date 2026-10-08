@@ -4,7 +4,7 @@ const _home=home;
 home=function(){
   _home();
   const go=$("#go"),rules=document.querySelector(".rules");
-  rules.insertAdjacentHTML("beforebegin",`<div class="sources"><h3>Questions utilisées</h3><ul><li>Les 3 QCMs d'entraînement de Chantal Prime</li><li>Le QCM noté tombé l'an dernier</li><li>Les questions créées par l'IA sont repérées par le badge <span class="badge ai">✦ Créée par IA avec le cours</span></li></ul></div>`);
+  rules.insertAdjacentHTML("beforebegin",`<div class="sources"><h3>Questions utilisées</h3><ul><li>Les 6 QCMs de Chantal Prime</li><li>Le QCM noté tombé l'an dernier</li><li>Les questions créées par l'IA sont repérées par le badge <span class="badge ai">✦ Créée par IA avec le cours</span></li></ul></div>`);
   go.insertAdjacentHTML("beforebegin",`<form id="gate" class="gate" autocomplete="off"><div class="gate-title">🔒 Accès au QCM</div><input id="pw" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Code d'accès" aria-label="Code d'accès"><div id="pwerr" class="pwerr" role="alert"></div></form>`);
   const err=m=>{
     const g=$("#gate");
