@@ -23,5 +23,8 @@ code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--bg);padd
 .gate.shake{animation:shake .35s}
 @keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
 @media(prefers-reduced-motion:reduce){.gate.shake{animation:none}}
+.aiopt{display:flex;align-items:center;justify-content:center;gap:10px;max-width:380px;margin:0 auto 18px;padding:10px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);cursor:pointer;font-weight:600}
+.aiopt:hover{border-color:var(--accent)}
+.aiopt input{width:18px;height:18px;accent-color:var(--accent);cursor:pointer}
 .ref{margin-top:16px;padding:10px 14px;border-radius:12px;background:var(--aibg);border:1px dashed var(--ai);font-size:.92rem}
 .ref b{color:var(--ai)}
